@@ -1,2 +1,3 @@
+#Lioncraft-Ecommerce Website
 "LionCraft is an online shopping platform designed to offer users a premium experience while purchasing t-shirts, accessories, and exclusive premium t-shirts. What makes LionCraft special is its blend of modern web technologies and innovative features like an AI-powered design tool. The website is built using HTML, CSS, Bootstrap, and JavaScript for the frontend, ensuring it’s responsive and visually stunning. The backend is powered by Django, a robust Python framework, and the database is managed with MySQL. With a sleek UI/UX design featuring gold and premium themes, LionCraft provides an elegant and luxurious feel that enhances the shopping experience."
 
