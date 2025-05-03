@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">My Orders</h2>
+
+  {% if orders %}
+    <div class="accordion" id="ordersAccordion">
+      {% for order in orders %}
+        <div class="card mb-3">
+          <div class="card-header">
+            Order #{{ order.order_id }} — ₹{{ order.calculate_total }}
+          </div>
+          <div class="card-body">
+            <h5>Shipping Address</h5>
+            <p>
+              {{ order.first_name }} {{ order.last_name }}<br>
+              {{ order.house_number }}{% if order.street_name %}, {{ order.street_name }}{% endif %}<br>
+              {{ order.city }}, {{ order.state }}<br>
+              {{ order.country }} — {{ order.post_code }}<br>
+              Phone: {{ order.phone }}
+            </p>
+            <hr>
+            <h5>Items</h5>
+            <ul class="list-group">
+              {% for item in order.items.all %}
+                <li class="list-group-item d-flex align-items-center">
+                  {% if item.product and item.product.image1 %}
+                    <img src="{{ item.product.image1.url }}" alt="{{ item.product.name }}" class="me-3" style="width:60px;">
+                  {% endif %}
+                  <div>
+                    <strong>{{ item.product.name }}</strong><br>
+                    Size: {{ item.size }} × {{ item.quantity }}<br>
+                    Price: ₹{{ item.product_price|floatformat:2 }}
+                  </div>
+                </li>
+              {% empty %}
+                <li class="list-group-item">No items found for this order.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>You haven't placed any orders yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="mb-4">🛠️ Admin: Order Management</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>User</th>
+        <th>Total (₹)</th>
+        <th>Status</th>
+        <th>Items</th>
+        <th>Address</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr id="order-row-{{ order.order_id }}">
+        <td>{{ order.order_id }}</td>
+        <td>{{ order.user.email }}</td>
+        <td>{{ order.calculate_total }}</td>
+        <td class="order-status">{{ order.status }}</td>
+        <td>
+          <ul class="list-unstyled">
+            {% for it in order.items.all %}
+            <li>
+                {% if it.product %}
+                  {{ it.product.name }}
+                {% else %}
+                  {{ it.custom_name }}
+                {% endif %}
+                ×{{ it.quantity }}
+              </li>
+              
+            {% endfor %}
+          </ul>
+        </td>
+        <td>
+          {{ order.house_number }}, {{ order.street_name }}<br>
+          {{ order.city }}, {{ order.state }}<br>
+          {{ order.country }} — {{ order.post_code }}<br>
+          📞 {{ order.phone }}
+        </td>
+        <td>
+          {% if order.status != 'Order to be delivered' %}
+            <button class="btn btn-sm btn-warning status-btn"
+                    data-order-id="{{ order.order_id }}"
+                    data-new-status="Order to be delivered">
+              Mark “To Deliver”
+            </button>
+          {% endif %}
+          {% if order.status != 'Delivered' %}
+            <button class="btn btn-sm btn-success status-btn"
+                    data-order-id="{{ order.order_id }}"
+                    data-new-status="Delivered">
+              Mark Delivered
+            </button>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  document.querySelectorAll('.status-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const orderId   = btn.dataset.orderId;
+      const newStatus = btn.dataset.newStatus;
+      fetch(`/products/admin/orders/${orderId}/status/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ new_status: newStatus })
+      })
+      .then(r => r.json())
+      .then(json => {
+        if (json.success) {
+          // update the status cell
+          const row = document.getElementById(`order-row-${orderId}`);
+          row.querySelector('.order-status').innerText = json.status;
+          // remove the button you just used
+          btn.remove();
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

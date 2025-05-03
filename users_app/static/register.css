@@ -1,0 +1,326 @@
+/* Global Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(145deg, #1a1a1a 0%, #2b2e33 100%);
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* Register Container */
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: clamp(0.75rem, 3vw, 2rem) clamp(0.5rem, 2vw, 1rem);
+    min-height: calc(100vh - 120px);
+}
+
+/* Register Card */
+.register-card {
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: clamp(1rem, 4vw, 3rem) clamp(0.75rem, 3vw, 2.5rem);
+    width: 100%;
+    max-width: clamp(280px, 90vw, 450px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    transition: all 0.3s ease;
+}
+
+.register-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.98);
+}
+
+/* Register Header */
+.register-header {
+    text-align: center;
+    margin-bottom: clamp(0.75rem, 3vw, 2rem);
+}
+
+.register-logo .brand-text {
+    font-size: clamp(1.4rem, 5vw, 2.5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: clamp(1px, 0.4vw, 3px);
+    background: linear-gradient(45deg, #d4af37, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.register-logo .brand-text:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+
+/* Spark Effect */
+.register-logo .brand-text .spark {
+    position: absolute;
+    width: clamp(2px, 0.6vw, 4px);
+    height: clamp(2px, 0.6vw, 4px);
+    background: #ffd700;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.register-logo .brand-text:hover .spark {
+    opacity: 1;
+    animation: sparkParticle 1s infinite ease-out;
+}
+
+.register-logo .brand-text .spark:nth-child(1) {
+    top: -8px;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.register-logo .brand-text .spark:nth-child(2) {
+    top: 0;
+    left: 50%;
+    animation-delay: 0.2s;
+}
+
+.register-logo .brand-text .spark:nth-child(3) {
+    top: -4px;
+    left: 80%;
+    animation-delay: 0.4s;
+}
+
+@keyframes sparkParticle {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-15px) scale(0.5); }
+}
+
+.register-tagline {
+    font-size: clamp(0.7rem, 2vw, 1rem);
+    color: #d4af37;
+    margin-top: 0.5rem;
+    font-weight: 300;
+}
+
+/* Register Form */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.6rem, 2.5vw, 1.5rem);
+}
+
+/* Form Group */
+.form-group {
+    position: relative;
+}
+
+.form-group label {
+    color: #d4af37;
+    font-size: clamp(0.7rem, 2vw, 0.95rem);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: clamp(0.5rem, 2vw, 1rem) clamp(0.6rem, 2.5vw, 1.5rem);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 6px rgba(212, 175, 55, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.form-group input::placeholder {
+    color: #94a3b8;
+}
+
+/* Register Button */
+.register-btn {
+    padding: clamp(0.5rem, 2vw, 1rem);
+    background: linear-gradient(45deg, #d4af37, #ffd700);
+    border: none;
+    border-radius: 8px;
+    color: #000000;
+    font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: clamp(0.5px, 0.15vw, 1px);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 6px rgba(212, 175, 55, 0.2);
+}
+
+.register-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ffd700, #d4af37);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+}
+
+/* Register Footer */
+.register-footer {
+    text-align: center;
+    margin-top: clamp(0.6rem, 2.5vw, 1.5rem);
+}
+
+.register-footer p {
+    font-size: clamp(0.7rem, 2vw, 0.95rem);
+    color: #ffffff;
+    font-weight: 300;
+}
+
+.register-footer a {
+    color: #d4af37;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.register-footer a:hover {
+    color: #ffd700;
+    transform: translateX(2px);
+}
+
+.register-footer a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 50%;
+    background: #d4af37;
+    transition: all 0.3s ease;
+}
+
+.register-footer a:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .register-container {
+        padding: 0.75rem;
+    }
+
+    .register-card {
+        padding: 1rem;
+        max-width: 95vw;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .register-header {
+        margin-bottom: 1rem;
+    }
+
+    .register-logo .brand-text {
+        font-size: 1.2rem;
+    }
+
+    .register-tagline {
+        font-size: 0.7rem;
+    }
+
+    .register-form {
+        gap: 0.75rem;
+    }
+
+    .form-group label {
+        font-size: 0.75rem;
+    }
+
+    .form-group input {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .register-btn {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .register-footer {
+        margin-top: 1rem;
+    }
+
+    .register-footer p {
+        font-size: 0.75rem;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .register-container {
+        padding: 1rem;
+    }
+
+    .register-card {
+        padding: 1.5rem;
+        max-width: 85vw;
+    }
+
+    .register-logo .brand-text {
+        font-size: 1.6rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .register-container {
+        padding: 1.5rem;
+    }
+
+    .register-card {
+        padding: 2rem;
+        max-width: 70vw;
+    }
+
+    .register-logo .brand-text {
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .register-card {
+        padding: 2.5rem;
+        max-width: 500px;
+    }
+
+    .register-logo .brand-text {
+        font-size: 2.2rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .register-card {
+        padding: 3rem 2.5rem;
+        max-width: 450px;
+    }
+
+    .register-logo .brand-text {
+        font-size: 2.5rem;
+    }
+}
+
+/* Smooth Transitions */
+html {
+    scroll-behavior: smooth;
+}

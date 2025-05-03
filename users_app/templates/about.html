@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About - Lioncraft{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'about.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="about-section">
+        <div class="about-header">
+            <h1 class="about-title">
+                <span class="lion-text" style="color: chocolate;">Roar</span> of Lioncraft
+            </h1>
+            <p class="about-subtitle">Unleashing Creativity, One T-Shirt at a Time</p>
+        </div>
+
+        <div class="about-content">
+            <div class="about-text">
+                <p>
+                    At <span class="highlight">Lioncraft</span>, we believe every t-shirt tells a story—a roar of individuality, strength, and pride. Founded in 2025, our mission is to blend premium craftsmanship with the fierce spirit of the lion, creating wearable art that empowers you to stand out in the wild of everyday life.
+                </p>
+                <p>
+                    Our designs are inspired by the majesty of the lion—bold, untamed, and timeless. Whether you're prowling the urban jungle or ruling your own domain, our t-shirts are made to fit your vibe. With eco-friendly materials and cutting-edge AI design tools, we’re not just crafting clothing; we’re crafting a legacy.
+                </p>
+                <p>
+                    Join the pride. Wear your roar.
+                </p>
+            </div>
+
+            <div class="about-images">
+                <div class="image-container">
+                    <img src="/media/products/about_image1 (2).jpg"  alt="Lion T-Shirt 1" class="lion-image">
+                    <div class="lion-paw"></div>
+                </div>
+                <div class="image-container">
+                    <img src="/media/products/about_image2.jpg" alt="Lion T-Shirt 2" class="lion-image">
+                    <div class="lion-paw"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-footer">
+            <h2>Our Pride</h2>
+            <p>Strength. Style. Sustainability. That’s the Lioncraft way.</p>
+        </div>
+    </section>
+{% endblock %}

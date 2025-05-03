@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="mb-4">📈 Sales Report (Delivered Orders)</h2>
+
+  <a href="{% url 'download_sales_csv' %}" class="btn btn-success mb-3">⬇️ Download Sales CSV</a>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>Buyer</th>
+        <th>Total (₹)</th>
+        <th>Items</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>{{ order.order_id }}</td>
+        <td>{{ order.user.email }}</td>
+        <td>{{ order.calculate_total }}</td>
+        <td>
+          <ul class="list-unstyled">
+            {% for it in order.items.all %}
+        <li>
+            {% if it.product %}
+                {{ it.product.name }}
+            {% elif it.custom_name %}
+                {{ it.custom_name }}
+            {% else %}
+                Unknown Item
+            {% endif %}
+            ×{{ it.quantity }}
+        </li>
+    {% endfor %}
+          </ul>
+        </td>
+        <td>
+          {{ order.house_number }}, {{ order.street_name }}<br>
+          {{ order.city }}, {{ order.state }}<br>
+          {{ order.country }} — {{ order.post_code }}
+        </td>
+        <td>{{ order.phone }}</td>
+        <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
