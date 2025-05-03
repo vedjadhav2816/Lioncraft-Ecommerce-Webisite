@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="messageContainer"></div>
+
+<div class="container mt-4 premium-container">
+    <h2 class="premium-heading">Premium Collection</h2>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4">
+                <div class="premium-card mb-4">
+                    <div class="premium-image-wrapper">
+                        <!-- Premium Badge -->
+                        {% if product.is_premium %}
+                            <div class="premium-badge">Premium</div>
+                        {% endif %}
+                        
+                        <!-- Clicking the image redirects to product_detail page -->
+                        <a href="{% url 'product_detail' product.id %}">
+                            <img src="{{ product.image1.url }}" class="premium-image" alt="{{ product.name }}">
+                        </a>
+
+                        <div class="premium-overlay"></div>
+                    </div>
+                    <div class="premium-card-body">
+                        <h5 class="premium-title">{{ product.name }}</h5>
+                        <p class="premium-description">{{ product.description|truncatewords:15 }}</p>
+                        <p class="premium-price">₹{{ product.price_inr }} / ${{ product.price_usd }}</p>
+
+                        <div class="premium-actions">
+                            <form class="premiumCartForm" method="POST" action="{% url 'cart:add_to_cart' product.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="size" value="M">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="premium-btn add-to-cart">Add to Cart</button>
+                            </form>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="empty-message">No Premium products available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+<style>
+/* Premium Container */
+.premium-container {
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 3vw, 2.5rem);
+    background: linear-gradient(145deg, #1a1a1a 0%, #2b2e33 100%);
+    border: 2px solid #d4af37;
+    border-radius: 25px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(212, 175, 55, 0.2);
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+    position: relative;
+    overflow: hidden;
+}
+
+.premium-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+    animation: rotateGlow 20s infinite linear;
+}
+
+/* Premium Heading */
+.premium-heading {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: clamp(2px, 0.5vw, 4px);
+    background: linear-gradient(45deg, #d4af37, #ffd700, #d4af37);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+    position: relative;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.5), 0 0 25px rgba(212, 175, 55, 0.3);
+}
+
+.premium-heading::after {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 4px;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(45deg, #d4af37, #ffd700);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+/* Premium Card */
+.premium-card {
+    background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.premium-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.2);
+    border-color: #ffd700;
+}
+
+/* Premium Image */
+.premium-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* 1:1 Aspect Ratio */
+    overflow: hidden;
+}
+
+.premium-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Full image display */
+    transition: transform 0.5s ease;
+    z-index: 1;
+}
+
+.premium-card:hover .premium-image {
+    transform: scale(1.1);
+}
+
+.premium-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(212, 175, 55, 0.1), rgba(0, 0, 0, 0.3));
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 2;
+}
+
+.premium-card:hover .premium-overlay {
+    opacity: 1;
+}
+
+/* Premium Card Body */
+.premium-card-body {
+    padding: clamp(1.5rem, 3vw, 2rem);
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.8);
+    border-top: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+/* Premium Title */
+.premium-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    font-weight: 700;
+    color: #ffd700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+}
+
+/* Premium Description */
+.premium-description {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: #e6e6e6;
+    opacity: 0.9;
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+    font-style: italic;
+}
+
+/* Premium Price */
+.premium-price {
+    font-size: clamp(1.2rem, 2.8vw, 1.5rem);
+    font-weight: 700;
+    color: #d4af37;
+    margin-bottom: 1.5rem;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    background: linear-gradient(45deg, #d4af37, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Premium Actions */
+.premium-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Premium Button */
+.premium-btn {
+    display: inline-block;
+    padding: clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+    background: linear-gradient(45deg, #d4af37, #ffd700, #d4af37);
+    color: #000000;
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 12px;
+    transition: all 0.5s ease;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+}
+
+.premium-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.6);
+    color: #000000;
+}
+
+.premium-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 215, 0, 0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.premium-btn:hover::after {
+    width: 250%;
+    height: 250%;
+}
+
+/* Empty Message */
+.empty-message {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+    color: #d4af37;
+    text-align: center;
+    padding: 2.5rem;
+    width: 100%;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* Animation for Background Glow */
+@keyframes rotateGlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+    .premium-container {
+        padding: 2rem;
+    }
+
+    .premium-heading {
+        font-size: 2.2rem;
+    }
+
+    .premium-card {
+        margin-bottom: 2rem;
+    }
+
+    .premium-image-wrapper {
+        padding-top: 75%; /* Adjust for smaller screens */
+    }
+
+    .premium-title {
+        font-size: 1.4rem;
+    }
+
+    .premium-description {
+        font-size: 0.95rem;
+    }
+
+    .premium-price {
+        font-size: 1.2rem;
+    }
+
+    .premium-actions {
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .premium-btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+.premium-overlay {
+    pointer-events: none;
+}
+
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const forms = document.querySelectorAll(".premiumCartForm");
+    
+        forms.forEach((form) => {
+            form.addEventListener("submit", function (e) {
+                e.preventDefault(); // Prevent page reload
+    
+                const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+                const formData = new FormData(form);
+    
+                fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": csrfToken,
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        // ✅ Show toast
+                        const toastEl = document.getElementById("cartToast");
+                        const toastBody = document.getElementById("cartToastBody");
+                        toastBody.textContent = data.message;
+    
+                        const toast = new bootstrap.Toast(toastEl);
+                        toast.show();
+    
+                        // ✅ Update cart count
+                        const cartCount = document.getElementById("cart-count");
+                        if (cartCount) {
+                            cartCount.innerText = data.cart_count;
+                        }
+                    } else {
+                        showToast("Failed to add to cart!", "bg-danger");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    showToast("Something went wrong!", "bg-danger");
+                });
+            });
+        });
+    
+        function showToast(message, className = "bg-success") {
+            const toastEl = document.getElementById("cartToast");
+            const toastBody = document.getElementById("cartToastBody");
+            toastBody.textContent = message;
+            toastEl.className = `toast align-items-center text-white ${className} border-0`;
+    
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    });
+    </script>
+    
+{% endblock %}

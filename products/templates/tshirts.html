@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 product-container">
+    <h2 class="product-heading">T-Shirts</h2>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4">
+                <div class="product-card mb-4">
+                    <div class="product-image-wrapper">
+                        <!-- Clicking the image redirects to product_detail page -->
+                        <a href="{% url 'product_detail' product.id %}" class="image-link">
+                            <img src="{{ product.image1.url }}" class="product-image" alt="{{ product.name }}">
+                        </a>
+                    </div>
+
+                    <div class="product-card-body">
+                        <h5 class="product-title">
+                            <a href="{% url 'product_detail' product.id %}" class="title-link">{{ product.name }}</a>
+                        </h5>
+                        <p class="product-description">{{ product.description|truncatewords:15 }}</p>
+                        <p class="product-price">₹{{ product.price_inr }} / ${{ product.price_usd }}</p>
+
+                        <div class="product-actions">
+                            <form class="tshirtCartForm" method="POST" action="{% url 'cart:add_to_cart' product.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="size" value="M">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="product-btn add-to-cart">Add to Cart</button>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="empty-message">No T-Shirts available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+/* Product Container */
+.product-container {
+    padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-bottom: clamp(2rem, 5vw, 4rem);
+}
+
+/* Product Heading */
+.product-heading {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: clamp(1px, 0.3vw, 2px);
+    background: linear-gradient(45deg, #d4af37, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+    position: relative;
+    margin-bottom: clamp(1.5rem, 4vw, 3rem);
+}
+
+.product-heading::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 2px;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #d4af37;
+    transition: width 0.3s ease;
+}
+
+.product-heading:hover::after {
+    width: 100px;
+}
+
+/* Product Card */
+.product-card {
+    background: rgba(26, 26, 26, 0.95);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
+    border-color: #d4af37;
+}
+
+/* Product Image */
+.product-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* 1:1 Aspect Ratio */
+    overflow: hidden;
+}
+
+.product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Display full image without cropping */
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+.product-image-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-image-wrapper::before {
+    opacity: 1;
+}
+
+/* Image Link Styling (Remove Blue Color) */
+.image-link {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* Ensures the link fills the wrapper */
+}
+
+/* Product Card Body */
+.product-card-body {
+    padding: clamp(1rem, 2vw, 1.5rem);
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+}
+
+/* Product Title */
+.product-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: 600;
+    color: #d4af37;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+}
+
+/* Title Link Styling (Remove Blue Color) */
+.product-title .title-link {
+    text-decoration: none;
+    color: inherit; /* Inherits #d4af37 from .product-title */
+}
+
+.product-title .title-link:hover {
+    color: #ffd700; /* Optional: Lighter gold on hover */
+}
+
+/* Product Description */
+.product-description {
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    color: #ffffff;
+    opacity: 0.9;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+/* Product Price */
+.product-price {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-weight: 700;
+    color: #ffd700;
+    margin-bottom: 1rem;
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Product Actions */
+.product-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+/* Product Button */
+.product-btn {
+    display: inline-block;
+    padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+    background: linear-gradient(45deg, #d4af37, #ffd700);
+    color: #000000;
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    flex: 1;
+    text-align: center;
+    border: none; /* Ensure button has no default border */
+}
+
+.product-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    color: #000000;
+}
+
+/* Empty Message */
+.empty-message {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: #d4af37;
+    text-align: center;
+    padding: 2rem;
+    width: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+    .product-container {
+        padding: 1.5rem;
+    }
+
+    .product-heading {
+        font-size: 1.8rem;
+    }
+
+    .product-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .product-image-wrapper {
+        padding-top: 75%; /* Adjust aspect ratio for smaller screens */
+    }
+
+    .product-title {
+        font-size: 1.2rem;
+    }
+
+    .product-description {
+        font-size: 0.9rem;
+    }
+
+    .product-price {
+        font-size: 1rem;
+    }
+
+    .product-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
+/* Empty Message */
+.empty-message {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+    color: #ff6347;
+    text-align: center;
+    padding: 2.5rem;
+    width: 100%;
+    text-shadow: 0 0 10px rgba(255, 99, 71, 0.3);
+}
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const forms = document.querySelectorAll(".tshirtCartForm");
+
+    forms.forEach((form) => {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault(); // Stop full page reload
+
+            const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    // ✅ Show Bootstrap toast
+                    const toastEl = document.getElementById("cartToast");
+                    const toastBody = document.getElementById("cartToastBody");
+                    toastBody.textContent = data.message;
+
+                    const toast = new bootstrap.Toast(toastEl);
+                    toast.show();
+
+                    // ✅ Update cart count
+                    const cartCount = document.getElementById("cart-count");
+                    if (cartCount) {
+                        cartCount.innerText = data.cart_count;
+                    }
+                } else {
+                    showToast("Failed to add to cart!", "bg-danger");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                showToast("Something went wrong!", "bg-danger");
+            });
+        });
+    });
+
+    // Toast function (optional styling via className)
+    function showToast(message, className = "bg-success") {
+        const toastEl = document.getElementById("cartToast");
+        const toastBody = document.getElementById("cartToastBody");
+        toastBody.textContent = message;
+        toastEl.className = `toast align-items-center text-white ${className} border-0`;
+
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+});
+
+</script>
+{% endblock %}

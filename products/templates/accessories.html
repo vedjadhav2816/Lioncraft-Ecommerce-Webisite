@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4 accessories-container">
+    <h2 class="accessories-heading">Accessories</h2>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-4">
+                <div class="accessories-card mb-4">
+                    <div class="accessories-image-wrapper">
+                        <!-- Clicking the image redirects to product_detail page -->
+                        <a href="{% url 'product_detail' product.id %}">
+                            <img src="{{ product.image1.url }}" class="accessories-image" alt="{{ product.name }}">
+                        </a>
+                        
+                        <div class="accessories-overlay"></div>
+                    </div>
+                    <div class="accessories-card-body">
+                        <h5 class="accessories-title">{{ product.name }}</h5>
+                        <p class="accessories-description">{{ product.description }}</p>
+                        <p class="accessories-price">₹{{ product.price_inr }} / ${{ product.price_usd }}</p>
+                        <div class="accessories-actions">
+                            <!-- Add to cart form (optional: implement same POST logic like premium page) -->
+                            <form class="accessoryCartForm" method="POST" action="{% url 'cart:add_to_cart' product.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="size" value="M">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="accessories-btn add-to-cart">Add to Cart</button>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="empty-message">No Accessories available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+<style>
+/* Accessories Container */
+.accessories-container {
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 3vw, 2.5rem);
+    background: linear-gradient(145deg, #1a1a1a 0%, #2b2e33 100%);
+    border: 2px solid #b8860b; /* Darker gold for accessories */
+    border-radius: 25px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(184, 134, 11, 0.2);
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+    position: relative;
+    overflow: hidden;
+}
+
+.accessories-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(184, 134, 11, 0.05) 0%, transparent 70%);
+    animation: rotateGlow 15s infinite linear;
+}
+
+/* Accessories Heading */
+.accessories-heading {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: clamp(2px, 0.5vw, 4px);
+    background: linear-gradient(45deg, #b8860b, #daa520, #b8860b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+    position: relative;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+    text-shadow: 0 0 15px rgba(184, 134, 11, 0.5), 0 0 25px rgba(184, 134, 11, 0.3);
+}
+
+.accessories-heading::after {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 4px;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(45deg, #b8860b, #daa520);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(184, 134, 11, 0.5);
+}
+
+/* Accessories Card */
+.accessories-card {
+    background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+    border: 1px solid rgba(184, 134, 11, 0.6);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.5s ease, border-color 0.5s ease; /* Only shadow and border transition */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.accessories-card:hover {
+    box-shadow: 0 20px 40px rgba(184, 134, 11, 0.4), 0 0 20px rgba(184, 134, 11, 0.2);
+    border-color: #daa520;
+}
+
+/* Accessories Image */
+.accessories-image-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; /* Adjusted for accessories */
+    overflow: visible; /* Ensure no cropping */
+}
+
+.accessories-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Full image display */
+    z-index: 1;
+}
+
+.accessories-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(184, 134, 11, 0.1), rgba(0, 0, 0, 0.4));
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 2;
+}
+
+.accessories-card:hover .accessories-overlay {
+    opacity: 1;
+}
+
+/* Accessories Card Body */
+.accessories-card-body {
+    padding: clamp(1.5rem, 3vw, 2rem);
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.8);
+    border-top: 1px solid rgba(184, 134, 11, 0.3);
+}
+
+/* Accessories Title */
+.accessories-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    font-weight: 700;
+    color: #daa520;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 8px rgba(184, 134, 11, 0.3);
+}
+
+/* Accessories Description */
+.accessories-description {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: #e6e6e6;
+    opacity: 0.9;
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+    font-style: italic;
+}
+
+/* Accessories Price */
+.accessories-price {
+    font-size: clamp(1.2rem, 2.8vw, 1.5rem);
+    font-weight: 700;
+    color: #b8860b;
+    margin-bottom: 1.5rem;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px rgba(184, 134, 11, 0.4);
+    background: linear-gradient(45deg, #b8860b, #daa520);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Accessories Actions */
+.accessories-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* Accessories Button */
+.accessories-btn {
+    display: inline-block;
+    padding: clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+    background: linear-gradient(45deg, #b8860b, #daa520, #b8860b);
+    color: #000000;
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 12px;
+    transition: box-shadow 0.5s ease; /* Only shadow transition */
+    flex: 1;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(184, 134, 11, 0.3);
+}
+
+.accessories-btn:hover {
+    box-shadow: 0 10px 25px rgba(184, 134, 11, 0.6);
+    color: #000000;
+}
+
+.accessories-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(218, 165, 32, 0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.accessories-btn:hover::after {
+    width: 250%;
+    height: 250%;
+}
+
+/* Empty Message */
+.empty-message {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+    color: #b8860b;
+    text-align: center;
+    padding: 2.5rem;
+    width: 100%;
+    text-shadow: 0 0 10px rgba(184, 134, 11, 0.3);
+}
+
+/* Animation for Background Glow */
+@keyframes rotateGlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+    .accessories-container {
+        padding: 2rem;
+    }
+
+    .accessories-heading {
+        font-size: 2.2rem;
+    }
+
+    .accessories-card {
+        margin-bottom: 2rem;
+    }
+
+    .accessories-image-wrapper {
+        padding-top: 75%;
+    }
+
+    .accessories-title {
+        font-size: 1.4rem;
+    }
+
+    .accessories-description {
+        font-size: 0.95rem;
+    }
+
+    .accessories-price {
+        font-size: 1.2rem;
+    }
+
+    .accessories-actions {
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .accessories-btn {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+.accessories-overlay {
+    pointer-events: none;
+}
+
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const forms = document.querySelectorAll(".accessoryCartForm");
+    
+        forms.forEach((form) => {
+            form.addEventListener("submit", function (e) {
+                e.preventDefault(); // Stop full page reload
+    
+                const csrfToken = form.querySelector("[name=csrfmiddlewaretoken]").value;
+                const formData = new FormData(form);
+    
+                fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": csrfToken,
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        // ✅ Show Bootstrap toast
+                        const toastEl = document.getElementById("cartToast");
+                        const toastBody = document.getElementById("cartToastBody");
+                        toastBody.textContent = data.message;
+    
+                        const toast = new bootstrap.Toast(toastEl);
+                        toast.show();
+    
+                        // ✅ Update cart count
+                        const cartCount = document.getElementById("cart-count");
+                        if (cartCount) {
+                            cartCount.innerText = data.cart_count;
+                        }
+                    } else {
+                        showToast("Failed to add to cart!", "bg-danger");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    showToast("Something went wrong!", "bg-danger");
+                });
+            });
+        });
+    
+        // Toast function (optional styling via className)
+        function showToast(message, className = "bg-success") {
+            const toastEl = document.getElementById("cartToast");
+            const toastBody = document.getElementById("cartToastBody");
+            toastBody.textContent = message;
+            toastEl.className = `toast align-items-center text-white ${className} border-0`;
+    
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+    });
+    </script>
+    
+    
+{% endblock %}

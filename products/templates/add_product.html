@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Add New Product</h2>
+    <div class="card p-4 shadow">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Display Form Fields -->
+            <div class="mb-3">
+                <label for="id_category" class="form-label">Category</label>
+                <select name="category" id="id_category" class="form-control">
+                    <option value="Premium">Premium</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="T-Shirts">T-Shirts</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_name" class="form-label">Product Name</label>
+                <input type="text" name="name" id="id_name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_description" class="form-label">Description</label>
+                <textarea name="description" id="id_description" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_price_inr" class="form-label">Price (INR)</label>
+                <input type="number" name="price_inr" id="id_price_inr" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_price_usd" class="form-label">Price (USD)</label>
+                <input type="number" name="price_usd" id="id_price_usd" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_image1" class="form-label">Main Image</label>
+                <input type="file" name="image1" id="id_image1" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_image2" class="form-label">Additional Image 1 (Optional)</label>
+                <input type="file" name="image2" id="id_image2" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="id_image3" class="form-label">Additional Image 2 (Optional)</label>
+                <input type="file" name="image3" id="id_image3" class="form-control">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Add Product</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
