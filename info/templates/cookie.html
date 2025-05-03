@@ -1,0 +1,256 @@
+<!-- info/templates/cookie_policy.html -->
+{% extends 'base.html' %}
+
+{% block title %}Lioncraft - Cookie Policy{% endblock %}
+
+{% block styles %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+       
+    }
+
+    body {
+        background-color: #1a1a1a; /* Dark premium background */
+        color: #fff;
+       
+    }
+
+    /* Cookie Policy Section */
+    .cookie-section {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    .cookie-section h1 {
+        text-align: center;
+        color: #ffd700; /* Gold color */
+        margin-bottom: 40px;
+        font-size: 36px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(45deg, #ffd700, #e6b800); /* Gold gradient */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeIn 1s ease-in;
+    }
+
+    /* Cookie Container */
+    .cookie-container {
+        display: grid;
+        gap: 20px;
+    }
+
+    /* Cookie Item */
+    .cookie-item {
+        background-color: #2a2a2a;
+        border-radius: 8px;
+        padding: 20px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .cookie-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3); /* Gold glow */
+    }
+
+    .cookie-item h3 {
+        color: #ffd700;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        transition: color 0.3s ease;
+    }
+
+    .cookie-item .cookie-details {
+        color: #ccc;
+        line-height: 1.6;
+        max-height: 0; /* Hidden by default */
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
+        padding: 0 10px;
+    }
+
+    /* Active state for dropdown */
+    .cookie-item.active .cookie-details {
+        max-height: 400px; /* Adjust based on content */
+        opacity: 1;
+        padding: 10px;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #000;
+        padding: 20px;
+        text-align: center;
+        border-top: 2px solid #ffd700;
+        animation: slideUp 1s ease-in;
+    }
+
+    .footer p {
+        color: #ccc;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .footer-links a {
+        color: #ffd700;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 14px;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #e6b800; /* Darker gold on hover */
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .cookie-section h1 {
+            font-size: 28px;
+        }
+
+        .cookie-item h3 {
+            font-size: 18px;
+        }
+
+        .cookie-item {
+            padding: 15px;
+        }
+
+        .cookie-container {
+            gap: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .cookie-section {
+            margin: 30px auto;
+        }
+
+        .cookie-section h1 {
+            font-size: 24px;
+        }
+
+        .cookie-item h3 {
+            font-size: 16px;
+        }
+
+        .cookie-item .cookie-details {
+            font-size: 14px;
+        }
+
+        .footer p,
+        .footer-links a {
+            font-size: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="cookie-section">
+    <h1>Cookie Policy</h1>
+    <div class="cookie-container">
+        <div class="cookie-item">
+            <h3>What Are Cookies?</h3>
+            <div class="cookie-details">
+                <p>Cookies are small text files stored on your device when you visit our website. They help us enhance your browsing experience, such as remembering your cart items or preferences.</p>
+            </div>
+        </div>
+        <div class="cookie-item">
+            <h3>Types of Cookies We Use</h3>
+            <div class="cookie-details">
+                <p>We use essential cookies for website functionality (e.g., session management), performance cookies to analyze site usage, and marketing cookies to deliver personalized ads (if you consent).</p>
+            </div>
+        </div>
+        <div class="cookie-item">
+            <h3>How We Use Cookies</h3>
+            <div class="cookie-details">
+                <p>Cookies enable us to process orders, improve website performance, and provide tailored content. For example, we use cookies to keep your cart active during your visit.</p>
+            </div>
+        </div>
+        <div class="cookie-item">
+            <h3>Managing Cookies</h3>
+            <div class="cookie-details">
+                <p>You can control cookies via our cookie consent banner or your browser settings. Disabling cookies may limit some website features, like cart functionality.</p>
+            </div>
+        </div>
+        <div class="cookie-item">
+            <h3>Third-Party Cookies</h3>
+            <div class="cookie-details">
+                <p>We may use third-party services (e.g., Google Analytics, advertising partners) that set cookies to analyze traffic or serve ads. These are governed by their respective privacy policies.</p>
+            </div>
+        </div>
+        <div class="cookie-item">
+            <h3>Contact Us</h3>
+            <div class="cookie-details">
+                <p>For questions about our Cookie Policy, contact us at privacy@lioncraft.com or through our customer support portal.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <p>© 2025 Lioncraft. All rights reserved.</p>
+    <div class="footer-links">
+        <a href="{% url 'privacy' %}">Privacy Policy</a> | 
+        <a href="{% url 'terms' %}">Terms and Conditions</a> | 
+        <a href="{% url 'cookie_policy' %}">Cookie Policy</a>
+    </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cookieItems = document.querySelectorAll('.cookie-item');
+
+        cookieItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+                cookieItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

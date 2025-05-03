@@ -1,0 +1,518 @@
+{% extends 'base.html' %}
+{% load cart_extras %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Shopping Cart</h2>
+
+  {% if cart_items %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Product</th>
+          <th>Size</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="cart-items-table">
+        {% for item in cart_items %}
+        <tr id="cart-item-{{ item.id }}"
+            data-update-url="{% url 'cart:update_cart_item' item.id %}"
+            data-remove-url="{% url 'cart:remove_from_cart' item.id %}">
+          <td>
+            {% if item.product %}
+              <img src="{{ item.product.image1.url }}" alt="{{ item.product.name }}" width="50">
+            {% elif item.custom_image_url %}
+              <img src="{{ item.custom_image_url }}" alt="{{ item.custom_name }}" width="50">
+            {% else %}
+              <span>No image</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if item.product %}
+              {{ item.product.name }}
+            {% else %}
+              {{ item.custom_name }} <span class="badge bg-info text-white">AI Design</span>
+            {% endif %}
+          </td>
+          <td>{{ item.size }}</td>
+          <td>
+            <div class="input-group" style="max-width:120px;">
+              <button class="btn btn-outline-secondary btn-decrease" style="width: 15px;" type="button">−</button>
+              <input type="text"
+                     class="form-control text-center quantity-input"
+                     value="{{ item.quantity }}"
+                     readonly>
+              <button class="btn btn-outline-secondary btn-increase" style="width: 15px;" type="button">+</button>
+            </div>
+          </td>
+          <td>
+            {% if item.product %}
+              ₹{{ item.product.price_inr }}
+            {% else %}
+              ₹600
+            {% endif %}
+          </td>
+          <td>
+            <span class="line-total">
+              {% if item.product %}
+                ₹{{ item.product.price_inr|multiply:item.quantity }}
+              {% else %}
+                ₹{{ 600|multiply:item.quantity }}
+              {% endif %}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm remove-btn" type="button">Remove</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Total Price: ₹<span id="cart-total">{{ total_price }}</span></h3>
+
+    <form method="post" action="{% url 'cart:payment' %}">
+      {% csrf_token %}
+      <input type="hidden" name="cart_data" id="cart_data_input">
+      <button type="submit" class="btn btn-success">Proceed to Checkout</button>
+    </form>
+  {% else %}
+    <p class="text-muted">Your cart is empty.</p>
+  {% endif %}
+</div>
+
+<script>
+function getCookie(name) {
+  let v = null;
+  document.cookie.split(';').forEach(c => {
+    const [k,val] = c.trim().split('=');
+    if (k === name) v = decodeURIComponent(val);
+  });
+  return v;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // build payment payload
+  const cartData = [];
+  {% for item in cart_items %}
+    cartData.push({
+      image: `{% if item.product %}{{ item.product.image1.url }}{% elif item.custom_image_url %}{{ item.custom_image_url }}{% endif %}`,
+      title: `{% if item.product %}{{ item.product.name|escapejs }}{% else %}{{ item.custom_name|escapejs }}{% endif %}`,
+      quantity: {{ item.quantity }},
+      price: {% if item.product %}{{ item.product.price_inr }}{% else %}600{% endif %}
+    });
+  {% endfor %}
+  document.getElementById("cart_data_input").value = JSON.stringify(cartData);
+
+  // live qty & remove
+  document.querySelectorAll("#cart-items-table tr").forEach(row => {
+    const updateUrl = row.dataset.updateUrl;
+    const removeUrl = row.dataset.removeUrl;
+    const qtyInput  = row.querySelector(".quantity-input");
+    const lineTotal = row.querySelector(".line-total");
+    const recalc    = n => document.getElementById("cart-total").textContent = n;
+
+    row.querySelector(".btn-increase").onclick = () => adjust(+1);
+    row.querySelector(".btn-decrease").onclick = () => adjust(-1);
+
+    async function adjust(delta) {
+      let q = Math.max(1, parseInt(qtyInput.value) + delta);
+      try {
+        const res  = await fetch(updateUrl, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ quantity: q })
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) throw data.error||"fail";
+
+        qtyInput.value        = data.quantity;
+        lineTotal.textContent = `₹${data.line_total}`;
+        recalc(data.cart_total);
+      } catch {
+        alert("❌ Failed to update quantity.");
+      }
+    }
+
+    row.querySelector(".remove-btn").onclick = async () => {
+      if (!confirm("Remove this item?")) return;
+      try {
+        const res  = await fetch(removeUrl, {
+          method: "POST",
+          headers: { "X-CSRFToken": getCookie("csrftoken") }
+        });
+        const data = await res.json();
+        if (data.message) {
+          row.remove();
+          if (data.new_total) recalc(data.new_total);
+        } else throw data.error;
+      } catch {
+        alert("❌ Error removing item.");
+      }
+    };
+  });
+});
+</script>
+
+
+
+<style>
+/* Scoped Container Styling */
+div.container.mt-5 {
+    padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
+    background: linear-gradient(145deg, #1a1a1a 0%, #2b2e33 100%);
+    border: 2px solid #b8860b;
+    border-radius: 25px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(184, 134, 11, 0.2);
+    margin-bottom: clamp(2rem, 5vw, 4rem);
+    position: relative;
+    overflow: hidden;
+}
+
+div.container.mt-5::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(184, 134, 11, 0.05) 0%, transparent 70%);
+    animation: rotateGlow 15s infinite linear;
+}
+
+/* Scoped Heading */
+div.container.mt-5 h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: #daa520;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 10px rgba(184, 134, 11, 0.3);
+    margin-bottom: 2rem;
+}
+
+/* Scoped Table Styling (Large Screens) */
+table.table.table-striped {
+    background: rgba(31, 31, 31, 0.8);
+    border: 1px solid rgba(184, 134, 11, 0.6);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    table-layout: fixed;
+}
+
+table.table.table-striped thead tr {
+    background: linear-gradient(45deg, #b8860b, #daa520);
+    color: #000000;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+table.table.table-striped th {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: clamp(0.75rem, 1.5vw, 1rem);
+    border: none;
+    text-align: center;
+}
+
+table.table.table-striped tbody#cart-items-table tr {
+    background: rgba(255, 255, 255, 0.05);
+    transition: background 0.3s ease;
+}
+
+table.table.table-striped tbody#cart-items-table tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+table.table.table-striped td {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+    color: #daa520;
+    padding: clamp(0.75rem, 1.5vw, 1rem);
+    vertical-align: middle;
+    border-top: 1px solid rgba(184, 134, 11, 0.2);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Larger Image Styling (All Screens) */
+table.table.table-striped td img {
+    width: clamp(150px, 25vw, 200px); /* Increased size for all screens */
+    height: auto;
+    object-fit: contain;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.3s ease;
+}
+
+table.table.table-striped td img:hover {
+    box-shadow: 0 0 10px rgba(184, 134, 11, 0.5);
+}
+
+table.table.table-striped td span {
+    color: #b8860b;
+    font-style: italic;
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+}
+
+/* Column Widths (Large Screens) */
+table.table.table-striped th:nth-child(1),
+table.table.table-striped td:nth-child(1) { /* Image */
+    width: 25%; /* Increased to accommodate larger image */
+}
+
+table.table.table-striped th:nth-child(2),
+table.table.table-striped td:nth-child(2) { /* Product */
+    width: 25%;
+}
+
+table.table.table-striped th:nth-child(3),
+table.table.table-striped td:nth-child(3) { /* Size */
+    width: 10%;
+}
+
+table.table.table-striped th:nth-child(4),
+table.table.table-striped td:nth-child(4) { /* Quantity */
+    width: 10%;
+}
+
+table.table.table-striped th:nth-child(5),
+table.table.table-striped td:nth-child(5) { /* Price */
+    width: 10%;
+}
+
+table.table.table-striped th:nth-child(6),
+table.table.table-striped td:nth-child(6) { /* Total */
+    width: 10%;
+}
+
+table.table.table-striped th:nth-child(7),
+table.table.table-striped td:nth-child(7) { /* Action */
+    width: 15%;
+}
+
+/* Scoped Total Price */
+div.container.mt-5 h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 700;
+    color: #daa520;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(184, 134, 11, 0.3);
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: right;
+}
+
+/* Scoped Buttons */
+button.btn.btn-danger.btn-sm.remove-btn {
+    padding: clamp(0.4rem, 1vw, 0.6rem) clamp(1rem, 2vw, 1.2rem);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #8b0000, #ff4040, #8b0000);
+    color: #ffffff;
+    border: none;
+    transition: box-shadow 0.5s ease, transform 0.3s ease;
+    box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+button.btn.btn-danger.btn-sm.remove-btn:hover {
+    box-shadow: 0 10px 25px rgba(139, 0, 0, 0.6);
+    transform: translateY(-2px);
+}
+
+button.btn.btn-success {
+    padding: clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #daa520, #ffd700, #daa520);
+    color: #000000;
+    border: none;
+    transition: box-shadow 0.5s ease, transform 0.3s ease;
+    box-shadow: 0 5px 15px rgba(184, 134, 11, 0.3);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+button.btn.btn-success:hover {
+    box-shadow: 0 10px 25px rgba(184, 134, 11, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Scoped Empty Cart Message */
+div.container.mt-5 p.text-muted {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    color: #b8860b;
+    text-align: center;
+    padding: 2rem;
+    text-shadow: 0 0 10px rgba(184, 134, 11, 0.3);
+}
+
+/* Animation for Background Glow */
+@keyframes rotateGlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 767px) {
+    div.container.mt-5 {
+        padding: 1.5rem;
+    }
+
+    div.container.mt-5 h2 {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    /* Hide Table Header and Use Card Layout for Small Screens */
+    table.table.table-striped thead {
+        display: none; /* Hide header on small screens */
+    }
+
+    table.table.table-striped {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        margin: 0;
+    }
+
+    table.table.table-striped tbody#cart-items-table {
+        display: block; /* Stack items vertically */
+    }
+
+    table.table.table-striped tbody#cart-items-table tr {
+        display: flex;
+        flex-wrap: wrap;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(184, 134, 11, 0.6);
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    table.table.table-striped tbody#cart-items-table tr:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Image */
+    table.table.table-striped td:nth-child(1) {
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem;
+    }
+
+    table.table.table-striped td img {
+        width: clamp(150px, 25vw, 200px); /* Same large size as large screens */
+        margin: 0 auto;
+    }
+
+    /* Product Name */
+    table.table.table-striped td:nth-child(2) {
+        width: 100%;
+        font-size: 1.4rem; /* Increased for visibility */
+        font-weight: 700;
+        color: #daa520;
+        text-align: center;
+        padding: 0.75rem;
+    }
+
+    /* Size */
+    table.table.table-striped td:nth-child(3) {
+        width: 33.33%;
+        font-size: 1rem; /* Increased for visibility */
+        color: #e6e6e6;
+        padding: 0.5rem;
+        text-align: center;
+    }
+
+    /* Quantity */
+    table.table.table-striped td:nth-child(4) {
+        width: 33.33%;
+        font-size: 1rem; /* Increased for visibility */
+        color: #e6e6e6;
+        padding: 0.5rem;
+        text-align: center;
+    }
+
+    /* Price */
+    table.table.table-striped td:nth-child(5) {
+        width: 33.33%;
+        font-size: 1rem; /* Increased for visibility */
+        color: #e6e6e6;
+        padding: 0.5rem;
+        text-align: center;
+    }
+
+    /* Total */
+    table.table.table-striped td:nth-child(6) {
+        width: 100%;
+        font-size: 1.2rem; /* Increased for visibility */
+        font-weight: 700;
+        color: #daa520;
+        text-align: center;
+        padding: 0.75rem;
+    }
+
+    /* Action */
+    table.table.table-striped td:nth-child(7) {
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem;
+    }
+
+    button.btn.btn-danger.btn-sm.remove-btn {
+        padding: 0.6rem 1.2rem; /* Slightly larger for mobile */
+        font-size: 1rem; /* Increased for visibility */
+    }
+
+    div.container.mt-5 h3 {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+
+    button.btn.btn-success {
+        padding: 0.8rem 1.6rem; /* Slightly larger for mobile */
+        font-size: 1.1rem; /* Increased for visibility */
+        width: 100%;
+        margin-top: 1rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    table.table.table-striped th,
+    table.table.table-striped td {
+        font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+        padding: clamp(0.75rem, 1.5vw, 1rem);
+    }
+
+    table.table.table-striped td img {
+        width: clamp(150px, 25vw, 200px); /* Same large size as other screens */
+    }
+}
+</style>
+{% endblock %}

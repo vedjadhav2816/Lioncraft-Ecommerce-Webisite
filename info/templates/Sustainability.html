@@ -1,0 +1,272 @@
+<!-- info/templates/sustainability.html -->
+{% extends 'base.html' %}
+
+{% block title %}Lioncraft - Sustainability{% endblock %}
+
+{% block styles %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+       
+    }
+
+    body {
+        background-color: #1a1a1a; /* Dark premium background */
+        color: #fff;
+    }
+
+    /* Sustainability Section */
+    .sustainability-section {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    .sustainability-section h1 {
+        text-align: center;
+        color: #ffd700; /* Gold color */
+        margin-bottom: 40px;
+        font-size: 36px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(45deg, #ffd700, #e6b800); /* Gold gradient */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeIn 1s ease-in;
+    }
+
+    /* Sustainability Container */
+    .sustainability-container {
+        display: grid;
+        gap: 20px;
+    }
+
+    /* Initiative Item */
+    .initiative-item {
+        background-color: #2a2a2a;
+        border-radius: 8px;
+        padding: 20px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .initiative-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3); /* Gold glow */
+    }
+
+    .initiative-item h3 {
+        color: #ffd700;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        transition: color 0.3s ease;
+    }
+
+    .initiative-item .initiative-image {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        border: 2px solid #ffd700; /* Gold border */
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .initiative-item:hover .initiative-image {
+        transform: scale(1.05);
+        border-color: #e6b800; /* Darker gold on hover */
+    }
+
+    .initiative-item .initiative-details {
+        color: #ccc;
+        line-height: 1.6;
+        max-height: 0; /* Hidden by default */
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
+        padding: 0 10px;
+    }
+
+    /* Active state for dropdown */
+    .initiative-item.active .initiative-details {
+        max-height: 300px; /* Adjust based on content */
+        opacity: 1;
+        padding: 10px;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #000;
+        padding: 20px;
+        text-align: center;
+        border-top: 2px solid #ffd700;
+        animation: slideUp 1s ease-in;
+    }
+
+    .footer p {
+        color: #ccc;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .footer-links a {
+        color: #ffd700;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 14px;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #e6b800; /* Darker gold on hover */
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .sustainability-section h1 {
+            font-size: 28px;
+        }
+
+        .initiative-item h3 {
+            font-size: 18px;
+        }
+
+        .initiative-item {
+            padding: 15px;
+        }
+
+        .sustainability-container {
+            gap: 15px;
+        }
+
+        .initiative-item .initiative-image {
+            max-width: 200px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .sustainability-section {
+            margin: 30px auto;
+        }
+
+        .sustainability-section h1 {
+            font-size: 24px;
+        }
+
+        .initiative-item h3 {
+            font-size: 16px;
+        }
+
+        .initiative-item .initiative-details {
+            font-size: 14px;
+        }
+
+        .initiative-item .initiative-image {
+            max-width: 150px;
+        }
+
+        .footer p,
+        .footer-links a {
+            font-size: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="sustainability-section">
+    <h1>Our Commitment to Sustainability</h1>
+    <div class="sustainability-container">
+        <div class="initiative-item">
+            <h3>Eco-Friendly Materials</h3>
+            <img src="/media/products/sus1.jpg" alt="Organic cotton field" class="initiative-image">
+            <div class="initiative-details">
+                <p>We use organic cotton and recycled polyester in our t-shirts and accessories, reducing environmental impact while maintaining premium quality.</p>
+                <p><strong>Impact:</strong> Reduced carbon footprint by 30% in 2024.</p>
+            </div>
+        </div>
+        <div class="initiative-item">
+            <h3>Sustainable Packaging</h3>
+            <img src="/media/products/sus2.jpg" alt="Recyclable packaging" class="initiative-image">
+            <div class="initiative-details">
+                <p>All Lioncraft products are shipped in 100% recyclable, biodegradable packaging to minimize waste.</p>
+                <p><strong>Impact:</strong> Eliminated 10 tons of plastic waste in 2024.</p>
+            </div>
+        </div>
+        <div class="initiative-item">
+            <h3>Ethical Production</h3>
+            <img src="/media/products/sus3.webp" alt="Factory workers" class="initiative-image">
+            <div class="initiative-details">
+                <p>We partner with factories that ensure fair wages and safe working conditions, adhering to strict ethical standards.</p>
+                <p><strong>Impact:</strong> Supported over 500 workers with fair labor practices.</p>
+            </div>
+        </div>
+        <div class="initiative-item">
+            <h3>Carbon Neutral Shipping</h3>
+            <img src="/media/products/sus4.jpg"  alt="Eco-friendly shipping" class="initiative-image">
+            <div class="initiative-details">
+                <p>We offset carbon emissions for all shipments through partnerships with environmental organizations.</p>
+                <p><strong>Impact:</strong> Achieved carbon neutrality for 100% of 2024 deliveries.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <p>© 2025 Lioncraft. All rights reserved.</p>
+    <div class="footer-links">
+        <a href="{% url 'privacy' %}">Privacy Policy</a> | <a href="{% url 'terms' %}">Terms of Service</a>
+    </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const initiativeItems = document.querySelectorAll('.initiative-item');
+
+        initiativeItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+                initiativeItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

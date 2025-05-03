@@ -1,0 +1,493 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Payment</title>
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'cart/payment.css' %}?v=1.4">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <main class="payment-container">
+      <!-- Mobile Dropdown: Product Info -->
+      <div class="mobile-cart-dropdown">
+        <div class="dropdown-header">
+          <div class="dropdown-header-content">
+            <h3><i class="fas fa-lion"></i> Your Cart</h3>
+            <p class="total-price">Total: ₹{{ total_price }}</p>
+          </div>
+          <i class="fas fa-chevron-down dropdown-toggle"></i>
+        </div>
+        <div class="dropdown-content">
+          <div class="cart-items">
+            {% for item in cart_items %}
+              <div class="cart-item" data-item-id="{{ item.id }}">
+                <div class="cart-item-image-wrapper">
+                  <img src="{{ item.image }}" alt="{{ item.title }}" class="cart-item-image">
+                </div>
+                <div class="cart-item-details">
+                  <p class="cart-item-title">{{ item.title }}</p>
+                  <p class="cart-item-price">× {{ item.quantity }} = ₹{{ item.total_price|floatformat:0 }}</p>
+
+                </div>
+                <button class="delete-item" title="Remove Item"><i class="fas fa-trash-alt"></i></button>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-grid">
+        <!-- Left Side: Logo, Form, Payment -->
+        <div class="payment-left">
+          <div class="payment-logo">
+            <a href="#" class="logo-link">
+              <span class="brand-text">Lioncraft
+                <span class="spark"></span>
+                <span class="spark"></span>
+                <span class="spark"></span>
+              </span>
+            </a>
+          </div>
+
+          <h3>Shipping Address</h3>
+          <form id="payment-form">
+            {% csrf_token %}
+            <input type="hidden" name="cart_id" id="cart_id" value="{{ cart.id }}">
+            <!-- Hidden fields for cart items -->
+{% for item in cart_items %}
+<input type="hidden" name="product_ids" value="{{ item.product.id }}">
+<input type="hidden" name="product_titles" value="{{ item.product.title }}">
+<input type="hidden" name="product_images" value="{{ item.product.image.url }}">
+<input type="hidden" name="product_sizes" value="{{ item.size }}">
+<input type="hidden" name="product_quantities" value="{{ item.quantity }}">
+<input type="hidden" name="product_prices" value="{{ item.product.price_inr }}">
+{% endfor %}
+
+            <div class="form-group">
+              <input id="first_name" name="first_name" placeholder="First Name" required class="original-field">
+            </div>
+            <div class="form-group">
+              <input id="last_name" name="last_name" placeholder="Last Name" required class="original-field">
+            </div>
+            <div class="form-group">
+              <select id="country" name="country" class="custom-select original-field" required onchange="loadStates(this.value)">
+                <option value="">Select Country</option>
+                {% for country in countries %}
+                  <option value="{{ country }}">{{ country }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-group">
+              <select id="state" name="state" class="custom-select original-field" required>
+                <option value="">Select State</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <input id="region" name="region" placeholder="Region (Optional)" type="text">
+            </div>
+            <div class="form-group">
+              <input id="house_number" name="house_number" placeholder="House Number" required class="original-field" type="number">
+            </div>
+            <div class="form-group">
+              <input id="street_name" name="street_name" placeholder="Street Name" required class="original-field" type="text">
+            </div>
+            <div class="form-group">
+              <input id="apartment_suite_unit" name="apartment_suite_unit" placeholder="Apartment/Suite/Unit" required class="original-field" type="text">
+            </div>
+            <div class="form-group">
+              <input id="town" name="town" placeholder="Town (Optional)" type="text">
+            </div>
+            <div class="form-group">
+              <input id="city" name="city" placeholder="City" required class="original-field" type="text">
+            </div>
+            <div class="form-group">
+              <input id="post_code" name="post_code" placeholder="Post Code" required class="original-field" type="number">
+            </div>
+            <div class="form-group">
+              <input id="phone" name="phone" placeholder="Phone" required class="original-field" type="number">
+            </div>
+            <div class="form-group">
+              <textarea id="order_notes" name="order_notes" placeholder="Order Notes (Optional)"></textarea>
+            </div>
+
+            <!-- Use Another Address -->
+            <div class="another-address-toggle">
+              <label>
+                <input type="checkbox" id="another-address-checkbox">
+                <span class="toggle-dot"></span> Use Another Address
+              </label>
+            </div>
+            <div class="another-address-form" id="another-address-form">
+              <div class="form-group">
+                <input name="alt_first_name" placeholder="First Name" class="alt-field">
+              </div>
+              <div class="form-group">
+                <input name="alt_last_name" placeholder="Last Name" class="alt-field">
+              </div>
+              <div class="form-group">
+                <select name="alt_country" class="custom-select alt-field alt-country" onchange="loadAltStates(this.value)">
+                  <option value="">Select Country</option>
+                  {% for country in countries %}
+                    <option value="{{ country }}">{{ country }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <select name="alt_state" class="custom-select alt-field alt-state">
+                  <option value="">Select State</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <input name="alt_region" placeholder="Region (Optional)" type="text">
+              </div>
+              <div class="form-group">
+                <input name="alt_house_number" placeholder="House Number" class="alt-field" type="number">
+              </div>
+              <div class="form-group">
+                <input name="alt_street_name" placeholder="Street Name" class="alt-field" type="text">
+              </div>
+              <div class="form-group">
+                <input name="alt_apartment_suite_unit" placeholder="Apartment/Suite/Unit" class="alt-field" type="text">
+              </div>
+              <div class="form-group">
+                <input name="alt_town" placeholder="Town (Optional)" type="text">
+              </div>
+              <div class="form-group">
+                <input name="alt_city" placeholder="City" class="alt-field" type="text">
+              </div>
+              <div class="form-group">
+                <input name="alt_post_code" placeholder="Post Code" class="alt-field" type="number">
+              </div>
+              <div class="form-group">
+                <input name="alt_phone" placeholder="Phone" class="alt-field" type="number">
+              </div>
+              <div class="form-group">
+                <textarea name="alt_order_notes" placeholder="Order Notes (Optional)"></textarea>
+              </div>
+            </div>
+
+            <!-- <h3>Payment</h3>
+            <div class="security-badges">
+              <i class="fas fa-lock"></i> Secure Checkout
+              <img src="{% static 'cart/images/visa.png' %}" alt="Visa" class="payment-icon">
+              <img src="{% static 'cart/images/mastercard.png' %}" alt="Mastercard" class="payment-icon">
+              <img src="{% static 'cart/images/paypal.png' %}" alt="Paypal" class="payment-icon">
+            </div> -->
+            <!-- The Place Your Order button triggers the Razorpay flow -->
+            <button type="submit">
+              <i class="fas fa-lion"></i> Place Your Order
+            </button>
+          </form>
+        </div>
+
+        <!-- Right Side: Product Info (Large Screens) -->
+        <div class="payment-right">
+          <h3><i class="fas fa-lion"></i> Your Cart</h3>
+          <div class="cart-items">
+            {% for item in cart_items %}
+              <div class="cart-item" data-item-id="{{ item.id }}">
+                <div class="cart-item-image-wrapper">
+                  <img src="{{ item.image }}" alt="{{ item.title }}" class="cart-item-image">
+                </div>
+                <div class="cart-item-details">
+                  <p class="cart-item-title">{{ item.title }}</p>
+                  <p class="cart-item-price">× {{ item.quantity }} = ₹{{ item.price }}</p>
+                </div>
+                <!-- <button class="delete-item" title="Remove Item"><i class="fas fa-trash-alt"></i></button> -->
+              </div>
+            {% endfor %}
+          </div>
+          <p class="total-price">Total: ₹{{ total_price }}</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Scripts -->
+  <script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Match cookie name
+        if (cookie.startsWith(name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const countryStates = {{ countries_with_states|safe }};
+
+  // Load states for primary address
+  function loadStates(selectedCountry) {
+    const states = countryStates[selectedCountry] || [];
+    const stateDropdown = document.getElementById("state");
+    stateDropdown.innerHTML = "<option value=''>Select State</option>";
+    states.forEach(state => {
+      const option = document.createElement("option");
+      option.value = state;
+      option.text = state;
+      stateDropdown.appendChild(option);
+    });
+  }
+
+  // Load states for alternate address
+  function loadAltStates(selectedCountry) {
+    const states = countryStates[selectedCountry] || [];
+    const stateDropdown = document.querySelector(".alt-state");
+    stateDropdown.innerHTML = "<option value=''>Select State</option>";
+    states.forEach(state => {
+      const option = document.createElement("option");
+      option.value = state;
+      option.text = state;
+      stateDropdown.appendChild(option);
+    });
+  }
+
+  // Toggle mobile cart dropdown
+  document.querySelector('.dropdown-header').addEventListener('click', function() {
+    const content = document.querySelector('.dropdown-content');
+    const toggle = document.querySelector('.dropdown-toggle');
+    content.classList.toggle('active');
+    toggle.classList.toggle('fa-chevron-down');
+    toggle.classList.toggle('fa-chevron-up');
+  });
+
+  // Toggle another address form
+  document.getElementById('another-address-checkbox').addEventListener('change', function() {
+    const anotherAddressForm = document.getElementById('another-address-form');
+    const originalFields = document.querySelectorAll('.original-field');
+    const altFields = document.querySelectorAll('.alt-field');
+
+    if (this.checked) {
+      anotherAddressForm.classList.add('active');
+      originalFields.forEach(field => field.removeAttribute('required'));
+      altFields.forEach(field => field.setAttribute('required', 'required'));
+    } else {
+      anotherAddressForm.classList.remove('active');
+      originalFields.forEach(field => field.setAttribute('required', 'required'));
+      altFields.forEach(field => field.removeAttribute('required'));
+    }
+  });
+
+  // Delete cart item
+  document.querySelectorAll('.delete-item').forEach(button => {
+    button.addEventListener('click', function() {
+      const cartItem = this.closest('.cart-item');
+      const itemId = cartItem.dataset.itemId;
+      
+      fetch('/cart/remove/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ item_id: itemId })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          cartItem.remove();
+          const totalPriceEls = document.querySelectorAll('.total-price');
+          totalPriceEls.forEach(el => el.textContent = `Total: ₹${data.new_total}`);
+        } else {
+          alert('Error removing item');
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    });
+  });
+
+  document.getElementById('payment-form')?.addEventListener('submit', function (e) {
+    e.preventDefault();
+    handlePlaceOrder();
+  });
+
+  function handlePlaceOrder() {
+    const rawCartId = document.getElementById("cart_id")?.value || "cart-0";
+    const cart_id = parseInt(rawCartId.replace("cart-", ""));
+
+    fetch("/cart/create_order/", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCookie("csrftoken"),
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({ cart_id })  // ✅ sending cart_id
+    })
+    .then(res => {
+      if (res.status === 401) {
+        alert("⚠️ Please log in to place an order.");
+        window.location.href = `/login/?next=${encodeURIComponent(window.location.pathname)}`;
+        return;
+      }
+      if (!res.ok) {
+        throw new Error("Server error");
+      }
+      return res.json();
+    })
+    .then(data => {
+      if (data?.razorpay_order_id) {
+        console.log("✅ Order created:", data.razorpay_order_id, data.razorpay_amount);
+        launchRazorpayPayment(data);
+      } else if (data?.error) {
+        alert(`❌ ${data.error}`);
+      }
+    })
+    .catch(err => {
+      console.error("❌ Order creation failed:", err);
+      alert("❌ Something went wrong. Try again.");
+    });
+  }
+
+  function verifyPayment(resp) {
+    const payload = {
+      razorpay_payment_id: resp.razorpay_payment_id,
+      razorpay_order_id: resp.razorpay_order_id,
+      razorpay_signature: resp.razorpay_signature,
+      first_name: document.getElementById("first_name").value,
+      last_name: document.getElementById("last_name").value,
+      country: document.getElementById("country").value,
+      state: document.getElementById("state").value,
+      region: document.getElementById("region").value,
+      house_number: document.getElementById("house_number").value,
+      street_name: document.getElementById("street_name").value,
+      apartment_suite_unit: document.getElementById("apartment_suite_unit").value,
+      town: document.getElementById("town").value,
+      city: document.getElementById("city").value,
+      post_code: document.getElementById("post_code").value,
+      phone: document.getElementById("phone").value,
+      order_notes: document.getElementById("order_notes").value
+    };
+
+    fetch("{% url 'cart:verify_payment' %}", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.status === 'success') {
+        alert("✅ Payment Successful!");
+        window.location.href = "{% url 'cart:payment_success' %}";
+      } else {
+        alert("❌ " + data.message);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('❌ Verification failed.');
+    });
+  }
+
+  // Helper to get CSRF token from cookie
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split("; ");
+      for (let cookie of cookies) {
+        if (cookie.startsWith(name + "=")) {
+          cookieValue = decodeURIComponent(cookie.split("=")[1]);
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const deleteButtons = document.querySelectorAll('.delete-item');
+
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const item = this.closest('.cart-item');
+        const itemId = item.getAttribute('data-item-id');
+
+        fetch(`/cart/delete/${itemId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+          }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            item.remove();
+          } else {
+            alert("Failed to delete item.");
+          }
+        });
+      });
+    });
+  })
+  function launchRazorpayPayment(orderDetails) {
+  const options = {
+    key: orderDetails.razorpay_key_id,
+    amount: orderDetails.razorpay_amount,
+    currency: orderDetails.razorpay_currency,
+    name: "Fanwear Store",
+    description: "Custom T-Shirt Order",
+    order_id: orderDetails.razorpay_order_id,
+    handler: function (response) {
+      // This runs on successful payment
+      console.log("✅ Razorpay payment success:", response);
+      verifyPayment(response); // This sends data to backend
+    },
+    prefill: {
+      name: "{{ request.user.first_name }} {{ request.user.last_name }}",
+      email: "{{ request.user.email }}",
+      contact: "{{ request.user.profile.phone|default:'' }}"
+    },
+    theme: {
+      color: "#0f172a" // Tailwind slate-900 dark look
+    }
+  };
+
+  const razorpay = new Razorpay(options);
+  razorpay.open();
+}
+document.getElementById('payment-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const response = await fetch('/save-address-before-payment/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: formData
+    });
+
+    if (response.ok) {
+        console.log('Address saved, now trigger Razorpay');
+        // Now launch Razorpay checkout...
+    } else {
+        console.log('Failed to save address');
+    }
+});
+
+
+  </script>
+</body>
+</html>
+

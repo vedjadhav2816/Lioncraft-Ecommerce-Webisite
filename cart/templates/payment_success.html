@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Success</title>
+</head>
+<body>
+    <div class="success-container">
+        <div class="checkmark-wrapper">
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+        </div>
+        <h1>Payment Successful!</h1>
+        <p>Your order has been received and will be delivered soon.</p>
+        <p class="reassurance">You're all set! We've got everything under control. 🎉</p>
+        <a href="/" class="continue-btn">Continue Shopping</a>
+    </div>
+
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(145deg, #1a1a1a 0%, #2b2e33 100%);
+            color: #ffffff;
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(1rem, 5vw, 3rem);
+        }
+
+        /* Futuristic Font */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        /* Success Container */
+        .success-container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: clamp(2rem, 5vw, 3rem);
+            max-width: clamp(300px, 90%, 500px);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        /* Fade-in Animation for Container */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Checkmark Animation */
+        .checkmark-wrapper {
+            margin-bottom: 1.5rem;
+        }
+
+        .checkmark {
+            width: clamp(60px, 15vw, 80px);
+            height: clamp(60px, 15vw, 80px);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .checkmark-circle {
+            stroke: #d4af37;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            fill: none;
+            animation: stroke-circle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .checkmark-check {
+            stroke: #ffd700;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke-linecap: round;
+            animation: stroke-check 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+        }
+
+        @keyframes stroke-circle {
+            0% { stroke-dasharray: 166; stroke-dashoffset: 166; }
+            100% { stroke-dasharray: 166; stroke-dashoffset: 0; }
+        }
+
+        @keyframes stroke-check {
+            0% { stroke-dasharray: 48; stroke-dashoffset: 48; }
+            100% { stroke-dasharray: 48; stroke-dashoffset: 0; }
+        }
+
+        /* Success Heading */
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: #ffd700;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+        }
+
+        /* Paragraph Styling */
+        p {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .reassurance {
+            color: #d4af37;
+            font-style: italic;
+            font-weight: 300;
+            animation: slideIn 1s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Continue Shopping Button */
+        .continue-btn {
+            display: inline-block;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            color: #000000;
+            background: linear-gradient(45deg, #d4af37, #ffd700);
+            padding: clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+        }
+
+        .continue-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .continue-btn:hover::before {
+            opacity: 1;
+        }
+
+        /* Background Particle Animation for Celebration */
+        .success-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"%3E%3Ccircle cx="10" cy="10" r="2" fill="%23d4af37"/%3E%3Ccircle cx="50" cy="30" r="3" fill="%23ffd700"/%3E%3Ccircle cx="80" cy="70" r="2" fill="%23d4af37"/%3E%3Ccircle cx="120" cy="20" r="3" fill="%23ffd700"/%3E%3Ccircle cx="150" cy="90" r="2" fill="%23d4af37"/%3E%3Ccircle cx="180" cy="40" r="3" fill="%23ffd700"/%3E%3C/svg%3E');
+            background-size: 200px;
+            opacity: 0.2;
+            animation: particleFloat 10s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            0% { background-position: 0 0; }
+            100% { background-position: 200px 200px; }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 767px) {
+            .success-container {
+                padding: 1.5rem;
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: clamp(1.2rem, 4vw, 2rem);
+            }
+
+            p {
+                font-size: clamp(0.8rem, 2.5vw, 1rem);
+            }
+
+            .continue-btn {
+                font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+                padding: 0.5rem 1rem;
+            }
+
+            .checkmark {
+                width: clamp(50px, 12vw, 60px);
+                height: clamp(50px, 12vw, 60px);
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 991px) {
+            .success-container {
+                max-width: 80%;
+            }
+
+            h1 {
+                font-size: clamp(1.5rem, 4vw, 2.2rem);
+            }
+
+            p {
+                font-size: clamp(0.85rem, 2.5vw, 1.05rem);
+            }
+
+            .continue-btn {
+                font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!-- info/templates/accessibility.html -->
+{% extends 'base.html' %}
+
+{% block title %}Lioncraft - Accessibility{% endblock %}
+
+{% block styles %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        
+    }
+
+    body {
+        background-color: #1a1a1a; /* Dark premium background */
+        color: #fff;
+        
+    }
+
+    /* Accessibility Section */
+    .accessibility-section {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    .accessibility-section h1 {
+        text-align: center;
+        color: #ffd700; /* Gold color */
+        margin-bottom: 40px;
+        font-size: 36px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(45deg, #ffd700, #e6b800); /* Gold gradient */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeIn 1s ease-in;
+    }
+
+    /* Accessibility Container */
+    .accessibility-container {
+        display: grid;
+        gap: 20px;
+    }
+
+    /* Accessibility Item */
+    .accessibility-item {
+        background-color: #2a2a2a;
+        border-radius: 8px;
+        padding: 20px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .accessibility-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3); /* Gold glow */
+    }
+
+    .accessibility-item h3 {
+        color: #ffd700;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        transition: color 0.3s ease;
+    }
+
+    .accessibility-item .accessibility-details {
+        color: #ccc;
+        line-height: 1.6;
+        max-height: 0; /* Hidden by default */
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
+        padding: 0 10px;
+    }
+
+    /* Active state for dropdown */
+    .accessibility-item.active .accessibility-details {
+        max-height: 400px; /* Adjust based on content */
+        opacity: 1;
+        padding: 10px;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #000;
+        padding: 20px;
+        text-align: center;
+        border-top: 2px solid #ffd700;
+        animation: slideUp 1s ease-in;
+    }
+
+    .footer p {
+        color: #ccc;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .footer-links a {
+        color: #ffd700;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 14px;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #e6b800; /* Darker gold on hover */
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .accessibility-section h1 {
+            font-size: 28px;
+        }
+
+        .accessibility-item h3 {
+            font-size: 18px;
+        }
+
+        .accessibility-item {
+            padding: 15px;
+        }
+
+        .accessibility-container {
+            gap: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .accessibility-section {
+            margin: 30px auto;
+        }
+
+        .accessibility-section h1 {
+            font-size: 24px;
+        }
+
+        .accessibility-item h3 {
+            font-size: 16px;
+        }
+
+        .accessibility-item .accessibility-details {
+            font-size: 14px;
+        }
+
+        .footer p,
+        .footer-links a {
+            font-size: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="accessibility-section">
+    <h1>Accessibility Commitment</h1>
+    <div class="accessibility-container">
+        <div class="accessibility-item">
+            <h3>Website Accessibility</h3>
+            <div class="accessibility-details">
+                <p>We strive to make our website accessible to all users, adhering to WCAG 2.1 guidelines. Features include keyboard navigation, screen reader compatibility, and adjustable text sizes.</p>
+            </div>
+        </div>
+        <div class="accessibility-item">
+            <h3>Product Accessibility</h3>
+            <div class="accessibility-details">
+                <p>Our products, including t-shirts and accessories, are designed with inclusivity in mind, offering a range of sizes and easy-to-read care labels for diverse needs.</p>
+            </div>
+        </div>
+        <div class="accessibility-item">
+            <h3>Customer Support</h3>
+            <div class="accessibility-details">
+                <p>We provide accessible customer support through multiple channels, including email, phone, and live chat, with accommodations for users with disabilities.</p>
+            </div>
+        </div>
+        <div class="accessibility-item">
+            <h3>Feedback and Improvements</h3>
+            <div class="accessibility-details">
+                <p>We welcome feedback on our accessibility efforts. Contact us at accessibility@lioncraft.com to report issues or suggest improvements.</p>
+            </div>
+        </div>
+        <div class="accessibility-item">
+            <h3>Training and Awareness</h3>
+            <div class="accessibility-details">
+                <p>Our team receives regular training on accessibility best practices to ensure we maintain an inclusive experience for all customers.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <p>© 2025 Lioncraft. All rights reserved.</p>
+    <div class="footer-links">
+        <a href="{% url 'privacy' %}">Privacy Policy</a> | 
+        <a href="{% url 'terms' %}">Terms and Conditions</a> | 
+        <a href="{% url 'cookie_policy' %}">Cookie Policy</a> | 
+        <a href="{% url 'accessibility' %}">Accessibility</a>
+    </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const accessibilityItems = document.querySelectorAll('.accessibility-item');
+
+        accessibilityItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+                accessibilityItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

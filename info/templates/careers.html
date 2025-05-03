@@ -1,0 +1,250 @@
+<!-- info/templates/careers.html -->
+{% extends 'base.html' %}
+
+{% block title %}Lioncraft - Careers{% endblock %}
+
+{% block styles %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        
+    }
+
+    body {
+        background-color: #1a1a1a; /* Dark premium background */
+        color: #fff;
+        
+    }
+
+    /* Careers Section */
+    .careers-section {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    .careers-section h1 {
+        text-align: center;
+        color: #ffd700; /* Gold color */
+        margin-bottom: 40px;
+        font-size: 36px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(45deg, #ffd700, #e6b800); /* Gold gradient */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeIn 1s ease-in;
+    }
+
+    /* Careers Container */
+    .careers-container {
+        display: grid;
+        gap: 20px;
+    }
+
+    /* Job Item */
+    .job-item {
+        background-color: #2a2a2a;
+        border-radius: 8px;
+        padding: 20px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .job-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3); /* Gold glow */
+    }
+
+    .job-item h3 {
+        color: #ffd700;
+        font-size: 20px;
+        margin-bottom: 10px;
+        transition: color 0.3s ease;
+    }
+
+    .job-item .job-details {
+        color: #ccc;
+        line-height: 1.6;
+        max-height: 0; /* Hidden by default */
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
+        padding: 0 10px;
+    }
+
+    /* Active state for dropdown */
+    .job-item.active .job-details {
+        max-height: 300px; /* Adjust based on content */
+        opacity: 1;
+        padding: 10px;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #000;
+        padding: 20px;
+        text-align: center;
+        border-top: 2px solid #ffd700;
+        animation: slideUp 1s ease-in;
+    }
+
+    .footer p {
+        color: #ccc;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .footer-links a {
+        color: #ffd700;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 14px;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #e6b800; /* Darker gold on hover */
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .careers-section h1 {
+            font-size: 28px;
+        }
+
+        .job-item h3 {
+            font-size: 18px;
+        }
+
+        .job-item {
+            padding: 15px;
+        }
+
+        .careers-container {
+            gap: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .careers-section {
+            margin: 30px auto;
+        }
+
+        .careers-section h1 {
+            font-size: 24px;
+        }
+
+        .job-item h3 {
+            font-size: 16px;
+        }
+
+        .job-item .job-details {
+            font-size: 14px;
+        }
+
+        .footer p,
+        .footer-links a {
+            font-size: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="careers-section">
+    <h1>Join the Lioncraft Team</h1>
+    <div class="careers-container">
+        <div class="job-item">
+            <h3>Graphic Designer</h3>
+            <div class="job-details">
+                <p>Design unique and eye-catching graphics for our premium t-shirts and accessories. Requires proficiency in Adobe Creative Suite and a passion for streetwear fashion.</p>
+                <p><strong>Location:</strong> Remote</p>
+                <p><strong>Type:</strong> Full-time</p>
+                <p><strong>Apply:</strong> Send resume to careers@lioncraft.com</p>
+            </div>
+        </div>
+        <div class="job-item">
+            <h3>Marketing Specialist</h3>
+            <div class="job-details">
+                <p>Develop and execute marketing campaigns to promote Lioncraft’s premium products. Experience with social media advertising and SEO is a plus.</p>
+                <p><strong>Location:</strong> New York, NY</p>
+                <p><strong>Type:</strong> Part-time</p>
+                <p><strong>Apply:</strong> Send resume to careers@lioncraft.com</p>
+            </div>
+        </div>
+        <div class="job-item">
+            <h3>Production Manager</h3>
+            <div class="job-details">
+                <p>Oversee the production of high-quality apparel and accessories. Requires experience in supply chain management and quality control.</p>
+                <p><strong>Location:</strong> Los Angeles, CA</p>
+                <p><strong>Type:</strong> Full-time</p>
+                <p><strong>Apply:</strong> Send resume to careers@lioncraft.com</p>
+            </div>
+        </div>
+        <div class="job-item">
+            <h3>Customer Support Representative</h3>
+            <div class="job-details">
+                <p>Provide exceptional support to our customers, handling inquiries and returns. Strong communication skills and a customer-first mindset are essential.</p>
+                <p><strong>Location:</strong> Remote</p>
+                <p><strong>Type:</strong> Full-time</p>
+                <p><strong>Apply:</strong> Send resume to careers@lioncraft.com</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <p>© 2025 Lioncraft. All rights reserved.</p>
+    <div class="footer-links">
+        <a href="{% url 'privacy' %}">Privacy Policy</a> | <a href="{% url 'terms' %}">Terms of Service</a>
+    </div>
+</footer>
+{% endblock %}
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const jobItems = document.querySelectorAll('.job-item');
+
+        jobItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+                jobItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

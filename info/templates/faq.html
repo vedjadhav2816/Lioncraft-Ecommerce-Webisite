@@ -1,0 +1,250 @@
+<!-- info/templates/faq.html -->
+{% extends 'base.html' %}
+
+{% block title %}Lioncraft - FAQ{% endblock %}
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+
+{% block styles %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      
+    }
+
+    body {
+        background-color: #1a1a1a; /* Dark premium background */
+        color: #fff;
+        
+    }
+
+    /* FAQ Section */
+    .faq-section {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+
+    .faq-section h1 {
+        text-align: center;
+        color: #ffd700; /* Gold color */
+        margin-bottom: 40px;
+        font-size: 36px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        background: linear-gradient(45deg, #ffd700, #e6b800); /* Gold gradient */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeIn 1s ease-in;
+    }
+
+    /* FAQ Container */
+    .faq-container {
+        display: grid;
+        gap: 20px;
+    }
+
+    /* FAQ Item */
+    .faq-item {
+        background-color: #2a2a2a;
+        border-radius: 8px;
+        padding: 20px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .faq-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3); /* Gold glow */
+    }
+
+    .faq-item h3 {
+        color: #ffd700;
+        font-size: 20px;
+        margin-bottom: 10px;
+        transition: color 0.3s ease;
+    }
+
+    .faq-item p {
+        color: #ccc;
+        line-height: 1.6;
+        max-height: 0; /* Hidden by default */
+        opacity: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
+        padding: 0 10px;
+    }
+
+    /* Active state for dropdown */
+    .faq-item.active p {
+        max-height: 200px; /* Adjust based on content */
+        opacity: 1;
+        padding: 10px;
+    }
+
+    /* Footer */
+    .footer {
+        background-color: #000;
+        padding: 20px;
+        text-align: center;
+        border-top: 2px solid #ffd700;
+        animation: slideUp 1s ease-in;
+    }
+
+    .footer p {
+        color: #ccc;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .footer-links a {
+        color: #ffd700;
+        text-decoration: none;
+        margin: 0 10px;
+        font-size: 14px;
+        transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+        color: #e6b800; /* Darker gold on hover */
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .faq-section h1 {
+            font-size: 28px;
+        }
+
+        .faq-item h3 {
+            font-size: 18px;
+        }
+
+        .faq-item {
+            padding: 15px;
+        }
+
+        .faq-container {
+            gap: 15px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .faq-section {
+            margin: 30px auto;
+        }
+
+        .faq-section h1 {
+            font-size: 24px;
+        }
+
+        .faq-item h3 {
+            font-size: 16px;
+        }
+
+        .faq-item p {
+            font-size: 14px;
+        }
+
+        .footer p,
+        .footer-links a {
+            font-size: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="faq-section">
+    <h1>Frequently Asked Questions</h1>
+    <div class="faq-container">
+        <div class="faq-item">
+            <h3>What types of products does Lioncraft offer?</h3>
+            <p>Lioncraft specializes in premium t-shirts, accessories, and lifestyle products crafted with high-quality materials and unique designs.</p>
+        </div>
+        <div class="faq-item">
+            <h3>How can I track my order?</h3>
+            <p>Once your order is shipped, you’ll receive a tracking number via email. You can use this to track your package on our website or the carrier’s site.</p>
+        </div>
+        <div class="faq-item">
+            <h3>What is your return policy?</h3>
+            <p>We offer a 30-day return policy for unworn and undamaged items. Please contact our support team to initiate a return.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Do you ship internationally?</h3>
+            <p>Yes, we ship to most countries worldwide. Shipping costs and times vary depending on your location.</p>
+        </div>
+        <div class="faq-item">
+            <h3>How do I care for my Lioncraft t-shirts?</h3>
+            <p>We recommend washing t-shirts in cold water and air-drying to maintain their quality and print longevity.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Can I customize my order?</h3>
+            <p>Currently, we offer limited customization options. Contact our team to discuss any special requests.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <p>© 2025 Lioncraft. All rights reserved.</p>
+    <div class="footer-links">
+        <a href="{% url 'privacy' %}">Privacy Policy</a> | <a href="{% url 'terms' %}">Terms of Service</a>
+    </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}
